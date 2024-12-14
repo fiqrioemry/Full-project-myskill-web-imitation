@@ -40,22 +40,12 @@ export const sidebarNavItem = [
   },
 ];
 
-// sign up form
-export const signUpFormData = {
-  fullname: "",
+export const signInFormData = {
   email: "",
   password: "",
-  passwordConfirm: "",
 };
 
-export const signUpFormInput = [
-  {
-    name: "fullname",
-    label: "fullname",
-    placeholder: "Enter your fullname",
-    type: "text",
-    componentType: "input",
-  },
+export const signInFormInput = [
   {
     name: "email",
     label: "email",
@@ -70,11 +60,43 @@ export const signUpFormInput = [
     type: "password",
     componentType: "input",
   },
+];
+
+// sign up form
+export const signUpFormData = {
+  fullname: "",
+  email: "",
+  password: "",
+  passwordConfirm: "",
+};
+
+export const signUpFormInput = [
   {
-    name: "password",
-    label: "Password Confirmation",
-    placeholder: "Enter your password confirmation",
-    type: "password",
     componentType: "input",
+    name: "fullname",
+    label: "fullname",
+    placeholder: "Enter your full name",
+    type: "text",
+  },
+  {
+    componentType: "input",
+    name: "email",
+    label: "email",
+    placeholder: "Enter your email",
+    type: "email",
+  },
+  {
+    componentType: "input",
+    name: "password",
+    label: "password",
+    placeholder: "Enter your password",
+    type: "password",
+  },
+  {
+    componentType: "input",
+    name: "passwordConfirm",
+    label: "passwordConfirm",
+    placeholder: "Confirm your password",
+    type: "password",
   },
 ];

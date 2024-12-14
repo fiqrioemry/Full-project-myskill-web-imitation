@@ -1,11 +1,11 @@
 /* eslint-disable react/prop-types */
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import FormControls from "./FormControls";
 
 function FormInput({
   handleSubmit,
   isButtonLoading,
-  buttonTitle,
+  buttonTitle = "Submit",
   formControls = [],
   formData,
   setFormData,
@@ -24,7 +24,7 @@ function FormInput({
         type="submit"
         className="mt-5 w-full"
       >
-        {isButtonLoading ? buttonTitle || "Submit" : "loading"}
+        {isButtonLoading ? "loading" : buttonTitle}
       </Button>
     </form>
   );
