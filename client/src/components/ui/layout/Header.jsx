@@ -29,7 +29,9 @@ const Header = () => {
       <div className="container mx-auto flex items-center justify-between h-14">
         {/* Web logo */}
         {authPath.includes(location.pathname) ? (
-          <SidebarTrigger />
+          <div className="px-4">
+            <SidebarTrigger />
+          </div>
         ) : (
           <Link to="/" className="flex items-center space-x-3">
             <GraduationCap />
