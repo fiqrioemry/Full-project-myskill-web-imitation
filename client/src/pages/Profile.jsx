@@ -1,5 +1,6 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 
 const userData = {
   userName: "ahmad fiqri oemry",
@@ -11,24 +12,54 @@ const userData = {
 };
 
 const Profile = () => {
+  function isDataChanged() {
+    return null;
+  }
   return (
     <main className="container mx-auto">
-      <section className="h-screen py-3 px-6 ">
+      <section className="h-screen py-3 px-6 space-y-3">
         <h3>Welcome, {userData.userName}</h3>
+        <span>
+          information about your profile and preference accross learningSphere
+          services.
+        </span>
         <div>
-          <form className="space-y-3">
-            <div>
-              <Label htmlFor="">Username</Label>
-              <Input value={userData.userName} className="w-1/2" />
+          <form className="space-y-3 py-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-3 gap-y-3">
+              <div>
+                <Label htmlFor="">Username</Label>
+                <Input value={userData.userName} />
+              </div>
             </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-3 gap-y-3">
+              <div>
+                <Label htmlFor="">phone number</Label>
+                <Input value={userData.phoneNumber} />
+              </div>
 
-            <div>
-              <Input value={userData.phoneNumber} />
-              <Input value={userData.location} />
-              <Input value={userData.profession} />
-              <Input value={userData.lookingFor} />
-              <Input value={userData.linkCV} />
+              <div>
+                <Label htmlFor="">Location</Label>
+                <Input value={userData.location} />
+              </div>
+
+              <div>
+                <Label htmlFor="">profession</Label>
+                <Input value={userData.profession} />
+              </div>
+
+              <div>
+                <Label htmlFor="">Oppurtunity Looking</Label>
+                <Input value={userData.lookingFor} />
+              </div>
+
+              <div>
+                <Label htmlFor="">Link CV</Label>
+                <Input value={userData.linkCV} />
+              </div>
             </div>
+            <Button disabled={isDataChanged()} className="w-full md:w-1/2">
+              Save change
+            </Button>
           </form>
         </div>
       </section>
