@@ -39,3 +39,42 @@ export const sidebarNavItem = [
     icon: FileText,
   },
 ];
+
+// sign up form
+export const signUpFormData = {
+  fullname: "",
+  email: "",
+  password: "",
+  passwordConfirm: "",
+};
+
+export const signUpFormInput = [
+  {
+    name: "fullname",
+    label: "fullname",
+    placeholder: "Enter your fullname",
+    type: "text",
+    componentType: "input",
+  },
+  {
+    name: "email",
+    label: "email",
+    placeholder: "Enter your email",
+    type: "email",
+    componentType: "input",
+  },
+  {
+    name: "password",
+    label: "Password",
+    placeholder: "Enter your password",
+    type: "password",
+    componentType: "input",
+  },
+  {
+    name: "password",
+    label: "Password Confirmation",
+    placeholder: "Enter your password confirmation",
+    type: "password",
+    componentType: "input",
+  },
+];
