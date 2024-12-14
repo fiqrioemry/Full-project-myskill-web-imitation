@@ -1,18 +1,22 @@
 const express = require("express");
 const app = express();
-const cookie = require("cookie-parser");
 const dotenv = require("dotenv");
+const cookieParser = require("cookie-parser");
 dotenv.config();
 
 const PORT = process.env.PORT;
 const MONGO_DB = process.env.MONGODB_URI;
 const CLIENT_HOST = process.env.CLIENT_HOST;
 
-// support
+// support]
+app.use(cookieParser);
+app.use(express.json());
 app.use(
   cors({
     origin: CLIENT_HOST,
+    Credential: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-type", "Authorization"],
   })
 );
 
