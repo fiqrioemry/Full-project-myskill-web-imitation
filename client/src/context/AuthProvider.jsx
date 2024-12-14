@@ -1,5 +1,6 @@
 import { createContext, useContext, useState } from "react";
 import { signInFormData, signUpFormData } from "../config";
+import { userSignUp } from "../services";
 
 const AuthContext = createContext();
 
@@ -8,14 +9,18 @@ export const AuthProvider = ({ children }) => {
   const [signUpForm, setSignUpForm] = useState(signUpFormData);
   const [signInForm, setSignInForm] = useState(signInFormData);
   const [loading, setLoading] = useState(false);
+
   async function handleSignUp(e) {
     e.preventDefault();
-    console.log(signUpForm);
+    const data = await userSignUp(signUpFormData);
+    console.log(data);
   }
 
   async function handleSignIn(e) {
     e.preventDefault();
-    console.log(signInForm);
+    setLoading(false);
+    const result = await userSignUp(signUpForm);
+    console.log(result);
   }
 
   async function handleSignOut(e) {

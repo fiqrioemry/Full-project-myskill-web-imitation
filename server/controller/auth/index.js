@@ -1,13 +1,14 @@
-const { User } = require("../../model/User");
-const { Token } = require("../../model/User");
-const { Profile } = require("../../model/User");
+const User = require("../../model/User");
+const Token = require("../../model/Token");
+const Profile = require("../../model/Profile");
 const bcrypt = require("bcrypt");
 const dotenv = require("dotenv");
+const jwt = require("jsonwebtoken");
 dotenv.config();
 
 // user signup
 async function userSignUp(req, res) {
-  const { fullname, email, password, passwordConfirm } = req.body;
+  const { fullname, email, password, passwordConfirm, role } = req.body;
 
   try {
     if (password !== passwordConfirm)
@@ -28,6 +29,7 @@ async function userSignUp(req, res) {
     const newUser = await User.create({
       email,
       password: hashPassword,
+      role,
     });
 
     await Profile.create({
@@ -37,7 +39,7 @@ async function userSignUp(req, res) {
 
     return res
       .status(201)
-      .send({ success: true, message: "Registration is successfully" });
+      .send({ success: true, message: "Registration is success" });
   } catch (error) {
     res.status(500).send({
       success: false,
