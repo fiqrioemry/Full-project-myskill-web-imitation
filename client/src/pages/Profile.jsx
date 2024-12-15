@@ -2,30 +2,55 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserProfile } from "../store/action/user-action";
-import { useEffect } from "react";
+import { getUserProfile, updateUserProfile } from "../store/action/user-action";
+import { useEffect, useState } from "react";
 
 const Profile = () => {
   const dispatch = useDispatch();
-  const { profile } = useSelector((state) => state.user);
+  const [userProfile, setUserProfile] = useState(null);
+
+  const { profile, loading } = useSelector((state) => state.user);
+
   function isDataChanged() {
-    return null;
+    return JSON.stringify(userProfile) === JSON.stringify(profile);
   }
 
+  // Handle input change
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setUserProfile((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  // Load user profile from the store
   useEffect(() => {
-    if (!profile) dispatch(getUserProfile());
+    if (!profile) {
+      dispatch(getUserProfile());
+    } else {
+      setUserProfile({ ...profile });
+    }
   }, [dispatch, profile]);
+
+  // Handle save changes
+  const handleSaveChanges = () => {
+    if (!isDataChanged()) {
+      dispatch(updateUserProfile(userProfile));
+    }
+  };
+
   return (
     <main className="container mx-auto">
-      {!profile ? (
+      {!userProfile ? (
         <section className="h-screen flex items-center justify-center">
           <h1>LOADING...</h1>
         </section>
       ) : (
         <section className="h-screen py-3 px-6 space-y-3">
-          <h3>Welcome, {profile.userName}</h3>
+          <h3>Welcome, {userProfile.userName}</h3>
           <span>
-            information about your profile and preference accross learningSphere
+            Information about your profile and preferences across LearningSphere
             services.
           </span>
           <div>
@@ -33,37 +58,65 @@ const Profile = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-3 gap-y-3">
                 <div>
                   <Label htmlFor="">Username</Label>
-                  <Input value={profile.fullname} />
+                  <Input
+                    name="fullname"
+                    value={userProfile.fullname}
+                    onChange={handleChange}
+                  />
                 </div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-3 gap-y-3">
                 <div>
-                  <Label htmlFor="">phone number</Label>
-                  <Input value={profile.phone} />
+                  <Label htmlFor="">Phone Number</Label>
+                  <Input
+                    name="phone"
+                    value={userProfile.phone}
+                    onChange={handleChange}
+                  />
                 </div>
 
                 <div>
                   <Label htmlFor="">Location</Label>
-                  <Input value={profile.location} />
+                  <Input
+                    name="location"
+                    value={userProfile.location}
+                    onChange={handleChange}
+                  />
                 </div>
 
                 <div>
-                  <Label htmlFor="">profession</Label>
-                  <Input value={profile.profession} />
+                  <Label htmlFor="">Profession</Label>
+                  <Input
+                    name="profession"
+                    value={userProfile.profession}
+                    onChange={handleChange}
+                  />
                 </div>
 
                 <div>
-                  <Label htmlFor="">Oppurtunity Looking</Label>
-                  <Input value={profile.opportunity} />
+                  <Label htmlFor="">Opportunity Looking</Label>
+                  <Input
+                    name="opportunity"
+                    value={userProfile.opportunity}
+                    onChange={handleChange}
+                  />
                 </div>
 
                 <div>
                   <Label htmlFor="">Link CV</Label>
-                  <Input value={profile.linkCV} />
+                  <Input
+                    name="linkCV"
+                    value={userProfile.linkCV}
+                    onChange={handleChange}
+                  />
                 </div>
               </div>
-              <Button disabled={isDataChanged()} className="w-full md:w-1/2">
-                Save change
+              <Button
+                disabled={isDataChanged()}
+                onClick={handleSaveChanges}
+                className="w-full md:w-1/2"
+              >
+                {loading ? "loading" : "Save Changes"}
               </Button>
             </form>
           </div>

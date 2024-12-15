@@ -1,9 +1,14 @@
 import { toastMessage } from "../../hooks/toastMessage";
 import {
-  //sign-up_
+  //get profile
   GET_PROFILE_PROCESS,
   GET_PROFILE_FAILED,
   GET_PROFILE_SUCCESS,
+
+  //update profile
+  UPDATE_PROFILE_PROCESS,
+  UPDATE_PROFILE_FAILED,
+  UPDATE_PROFILE_SUCCESS,
   RESET_AUTH,
 } from "../constant/user-constant";
 
@@ -28,6 +33,24 @@ export const userReducer = (state = initialState, action) => {
     }
 
     case GET_PROFILE_FAILED:
+      return {
+        ...state,
+        success: action.payload.success,
+        message: action.payload.message,
+      };
+
+    // * UPDATE USER PROFILE ------------------------------------------------------------
+    case UPDATE_PROFILE_PROCESS:
+      return { ...state, loading: true };
+
+    case UPDATE_PROFILE_SUCCESS: {
+      return {
+        ...state,
+        profile: action.payload.data,
+      };
+    }
+
+    case UPDATE_PROFILE_FAILED:
       return {
         ...state,
         success: action.payload.success,

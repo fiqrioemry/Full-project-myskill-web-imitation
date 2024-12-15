@@ -1,9 +1,14 @@
 import { axiosInstance } from "../../api";
 import {
-  // sign-up
+  // get profile
   GET_PROFILE_PROCESS,
   GET_PROFILE_SUCCESS,
   GET_PROFILE_FAILED,
+
+  // update profile
+  UPDATE_PROFILE_PROCESS,
+  UPDATE_PROFILE_SUCCESS,
+  UPDATE_PROFILE_FAILED,
 
   //reset state
   RESET_AUTH,
@@ -28,15 +33,15 @@ export function getUserProfile() {
 export function updateUserProfile(formData) {
   return async function (dispatch) {
     try {
-      dispatch({ type: GET_PROFILE_PROCESS });
+      dispatch({ type: UPDATE_PROFILE_PROCESS });
 
-      const result = await axiosInstance.post("/api/auth/sign-up", {
+      const result = await axiosInstance.post("/api/user/profile/update", {
         ...formData,
       });
 
-      dispatch({ type: GET_PROFILE_SUCCESS, payload: result.data });
+      dispatch({ type: UPDATE_PROFILE_SUCCESS, payload: result.data });
     } catch (error) {
-      dispatch({ type: GET_PROFILE_FAILED, payload: error.response.data });
+      dispatch({ type: UPDATE_PROFILE_FAILED, payload: error.response.data });
     } finally {
       dispatch({ type: RESET_AUTH });
     }
