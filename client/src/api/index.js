@@ -3,6 +3,7 @@ import Cookies from "js-cookie";
 
 export const axiosInstance = axios.create({
   baseURL: "http://localhost:3000",
+  withCredentials: true,
 });
 
 axiosInstance.interceptors.request.use((config) => {

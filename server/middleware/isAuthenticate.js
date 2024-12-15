@@ -2,14 +2,14 @@ const jwt = require("jsonwebtoken");
 
 module.exports = async function isAuthenticate(req, res, next) {
   try {
-    const authHeader = req.headers.Authorization;
+    const authHeader = req.headers.authorization;
 
     const token = authHeader.split(" ").pop();
 
     if (!token)
       return res
         .status(401)
-        .send({ success: false, message: "Sessions Expired, please login" });
+        .send({ success: false, message: "Sessions Expired" });
 
     const decode = jwt.verify(token, process.env.ACCESS_TOKEN);
 

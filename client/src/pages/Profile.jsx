@@ -5,15 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { getUserProfile } from "../store/action/user-action";
 import { useEffect } from "react";
 
-const userData = {
-  userName: "ahmad fiqri oemry",
-  phoneNumber: "082160945033",
-  location: "Jakarta",
-  profession: "Front End Developer",
-  lookingFor: "Fulltime Entry Level",
-  linkCV: "www.linkcv.com",
-};
-
 const Profile = () => {
   const dispatch = useDispatch();
   const { profile } = useSelector((state) => state.user);
@@ -22,7 +13,7 @@ const Profile = () => {
   }
 
   useEffect(() => {
-    dispatch(getUserProfile());
+    if (!profile) dispatch(getUserProfile());
   }, [dispatch, profile]);
   return (
     <main className="container mx-auto">

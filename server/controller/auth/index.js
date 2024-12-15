@@ -107,6 +107,7 @@ async function userSignIn(req, res) {
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: true,
+      sameSite: "Strict",
       maxAge: 24 * 30 * 60 * 60 * 1000,
     });
 
@@ -145,4 +146,31 @@ async function userSignOut(req, res) {
   }
 }
 
-module.exports = { userSignUp, userSignIn, userSignOut };
+async function userRefreshToken(req, res) {
+  try {
+    const { refreshToken } = req.cookies;
+
+    if (!refreshToken) {
+      return res.status(401).send({ message: "Session Expired, Please Login" });
+    }
+
+    const refreshTokenData = await Token.findOne({ refreshToken });
+
+    if (!refreshTokenData) {
+      return res.status(403).send({ message: "Unauthorized Access !!!" });
+    }
+
+    const payload = jwt.verify(refreshToken, process.env.REFRESH_TOKEN);
+
+    const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN, {
+      expiresIn: "1h",
+    });
+    res
+      .status(200)
+      .send({ success: true, data: { accessToken, user: payload } });
+  } catch (error) {
+    return res.status(500).send(error.message);
+  }
+}
+
+module.exports = { userSignUp, userSignIn, userSignOut, userRefreshToken };
