@@ -11,7 +11,7 @@ import { FcGoogle } from "react-icons/fc";
 
 import { Button } from "@/components/ui/button";
 import { useAuth } from "../context/AuthProvider";
-import FormInput from "../components/ui/common/form/FormInput";
+import FormInput from "../components/common/common-form/FormInput";
 import { signUpFormInput } from "../config";
 
 const SignUp = () => {

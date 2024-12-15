@@ -64,7 +64,7 @@ export const signInFormInput = [
 
 // sign up form
 export const signUpFormData = {
-  fullname: "",
+  fullname : "",
   email: "",
   password: "",
   passwordConfirm: "",

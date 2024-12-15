@@ -1,16 +1,16 @@
 import Home from "./pages/Home";
-import Learning from "./pages/Learning";
-import { Routes, Route } from "react-router-dom";
-import MainLayout from "./components/ui/layout/MainLayout";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
-import AuthRoute from "./middleware/AuthRoute";
-import NotFound from "./pages/NotFound";
-import DashboardLayout from "./components/ui/layout/DashboardLayout";
 import Profile from "./pages/Profile";
+import NotFound from "./pages/NotFound";
+import Learning from "./pages/Learning";
 import Purchase from "./pages/Purchase";
 import Activity from "./pages/Activity";
 import Transaction from "./pages/Transaction";
+import AuthRoute from "./middleware/AuthRoute";
+import { Routes, Route } from "react-router-dom";
+import MainLayout from "./components/layout/MainLayout";
+import DashboardLayout from "./components/layout/DashboardLayout";
 
 function App() {
   return (

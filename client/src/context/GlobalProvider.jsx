@@ -1,5 +1,7 @@
 import { createContext, useContext, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const GlobalContext = createContext();
 
@@ -22,6 +24,7 @@ export const GlobalProvider = ({ children }) => {
       value={{ user, handleSignIn, handleSignOut, currentPath }}
     >
       {children}
+      <ToastContainer limit={2} />
     </GlobalContext.Provider>
   );
 };

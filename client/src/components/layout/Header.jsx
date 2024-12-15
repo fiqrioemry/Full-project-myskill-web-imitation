@@ -1,4 +1,4 @@
-import { authPath } from "../../../config";
+import { authPath } from "../../config";
 import {
   GraduationCap,
   LayoutDashboard,
@@ -8,7 +8,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "react-router-dom";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { useGlobal } from "../../../context/GlobalProvider";
+import { useGlobal } from "../../context/GlobalProvider";
 
 import {
   DropdownMenu,

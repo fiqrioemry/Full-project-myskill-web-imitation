@@ -1,5 +1,7 @@
 import { createContext, useContext, useState } from "react";
-import { signInFormData, signUpFormData } from "../config";
+import { signInFormData, signUpFormData } from "@/config";
+
+import { toast } from "react-toastify";
 import { userSignUp } from "../services";
 
 const AuthContext = createContext();
@@ -12,20 +14,27 @@ export const AuthProvider = ({ children }) => {
 
   async function handleSignUp(e) {
     e.preventDefault();
-    const data = await userSignUp(signUpFormData);
+    setLoading(true);
+
+    const data = await userSignUp(signUpForm);
     console.log(data);
+    if (data.success) {
+      toast.success(data.message);
+      setLoading(false);
+    } else {
+      toast.error(data.message);
+      setLoading(false);
+    }
   }
 
   async function handleSignIn(e) {
     e.preventDefault();
-    setLoading(false);
-    const result = await userSignUp(signUpForm);
-    console.log(result);
+    console.log("signin");
   }
 
   async function handleSignOut(e) {
     e.preventDefault();
-    console.log("user sign up");
+    console.log("signout");
   }
   return (
     <AuthContext.Provider

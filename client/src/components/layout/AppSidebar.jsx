@@ -9,8 +9,8 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { Link } from "react-router-dom";
-import { sidebarNavItem } from "../../../config";
-import { useGlobal } from "../../../context/GlobalProvider";
+import { sidebarNavItem } from "../../config";
+import { useGlobal } from "../../context/GlobalProvider";
 
 export function AppSidebar() {
   const { currentPath } = useGlobal();

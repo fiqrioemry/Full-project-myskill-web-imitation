@@ -6,52 +6,34 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import { useState } from "react";
-import { Progress } from "@/components/ui/progress";
 
 const Purchase = () => {
-  const [progress, setProgress] = useState(40);
-
   return (
     <main className="container mx-auto">
       <section className="h-screen py-3 px-6 space-y-3">
-        <div className="space-y-3">
-          <h2>Continue Learning</h2>
-          <span>Complete your learning progress to get certificate</span>
-          <div className="py-3">
-            <Card className="flex space-x-3 p-3">
-              <div className="hidden md:block rounded-md border w-32 "></div>
-              <div className="space-y-3 w-full md:w-1/2">
-                <h3></h3>Build a Property Web: Setup Projects & Homepage
-                <p>Alfi Nur Hakim - Software Engineer at Evermos</p>
-                <div className="w-full space-x-3 flex items-center">
-                  <Progress value={progress} className="w-[80%]" />
-                  <div>40 %</div>
-                </div>
-                <Button>Continue Learn</Button>
-              </div>
-            </Card>
-          </div>
-        </div>
-        <Tabs defaultValue="saved" className="w-full">
+        <Tabs defaultValue="e-learning" className="w-full">
           <TabsList className="grid grid-cols-2 md:grid-cols-4">
-            <TabsTrigger value="saved" className="">
-              Saved Course
+            <TabsTrigger value="e-learning" className="">
+              E-Learning
             </TabsTrigger>
-            <TabsTrigger value="completed">Completed Course</TabsTrigger>
+            <TabsTrigger value="bootcamp">Bootcamp</TabsTrigger>
           </TabsList>
 
           {/* E-Learning */}
-          <TabsContent value="saved" className="space-y-3 px-3">
+          <TabsContent value="e-learning" className="space-y-3 px-3">
             <div>
-              <span>
-                you dont have saved course, try to add one from e-learning
-              </span>
+              <h2>Congratulate, Your e-learning plan is activated</h2>
+              <span>your plan is active until 23 september 2025</span>
+              <div className="space-x-3 py-3">
+                <Button>Extend Subscription</Button>
+                <Button>Access e-learning</Button>
+              </div>
             </div>
 
-            <div className="space-y-3 py-3">
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-x-3 gap-y-3">
-                {[...Array(4)].map((__, index) => (
+            <div>
+              <h2>Purchase History</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-x-3">
+                {[...Array(3)].map((__, index) => (
                   <Card key={index}>
                     <CardHeader className="space-y-4">
                       <CardTitle>E-learning Package 12 Month</CardTitle>
@@ -65,17 +47,13 @@ const Purchase = () => {
                   </Card>
                 ))}
               </div>
-              <div className="space-x-3">
-                <Button className="w-1/3">Next</Button>
-                <Button className="w-1/3">Previous</Button>
-              </div>
             </div>
           </TabsContent>
 
           {/* Bootcamp */}
-          <TabsContent value="completed">
-            <div className="py-2 px-2  flex items-center justify-center">
-              <h2>Completed Course : Left-blank</h2>
+          <TabsContent value="bootcamp">
+            <div className="py-2 px-2 h-screen flex items-center justify-center">
+              <h2>Bootcamp Content</h2>
             </div>
           </TabsContent>
         </Tabs>

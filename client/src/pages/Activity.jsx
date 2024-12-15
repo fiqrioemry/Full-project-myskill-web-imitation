@@ -10,6 +10,7 @@ import { useState } from "react";
 import { Progress } from "@/components/ui/progress";
 
 const Activity = () => {
+  // eslint-disable-next-line no-unused-vars
   const [progress, setProgress] = useState(40);
 
   return (

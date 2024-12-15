@@ -3,7 +3,7 @@ import { Fragment } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { AppSidebar } from "./AppSidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { useGlobal } from "../../../context/GlobalProvider";
+import { useGlobal } from "../../context/GlobalProvider";
 
 // eslint-disable-next-line react/prop-types
 const DashboardLayout = () => {
