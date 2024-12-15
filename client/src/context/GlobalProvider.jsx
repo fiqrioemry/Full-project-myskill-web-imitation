@@ -1,7 +1,7 @@
-import { createContext, useContext, useState } from "react";
+import Cookies from "js-cookie";
+import { Toaster } from "react-hot-toast";
 import { useLocation } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { createContext, useContext } from "react";
 
 const GlobalContext = createContext();
 
@@ -9,22 +9,14 @@ const GlobalContext = createContext();
 export const GlobalProvider = ({ children }) => {
   const location = useLocation();
   const currentPath = location.pathname;
-  const [user, setUser] = useState(false);
-  //   const user = sessionStorage.getItem("user") || null;
-  const handleSignIn = () => {
-    setUser(true);
-  };
+  const user = Cookies.get("user") || null;
 
-  const handleSignOut = () => {
-    setUser(false);
-  };
+  console.log(user);
 
   return (
-    <GlobalContext.Provider
-      value={{ user, handleSignIn, handleSignOut, currentPath }}
-    >
+    <GlobalContext.Provider value={{ user, currentPath }}>
       {children}
-      <ToastContainer limit={2} />
+      <Toaster />
     </GlobalContext.Provider>
   );
 };

@@ -8,12 +8,17 @@ import {
 } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
-import { Input } from "@/components/ui/input";
+import { signInFormInput } from "../config";
 import { Button } from "@/components/ui/button";
-import { useGlobal } from "../context/GlobalProvider";
+import { useAuth } from "../context/AuthProvider";
+import FormInput from "../components/common/common-form/FormInput";
 
 const SignIn = () => {
-  const { handleSignIn } = useGlobal();
+  const { handleSignIn, signInForm, setSignInForm, loading } = useAuth();
+
+  function isFormFilled() {
+    return signInForm && signInForm.email && signInForm.password;
+  }
 
   return (
     <main className="bg-muted">
@@ -27,13 +32,15 @@ const SignIn = () => {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
-            <form onSubmit={handleSignIn} className="space-y-3 py-3 border-b">
-              <Input name="email" placeholder="Enter your email" />
-              <Input name="password" placeholder="Enter your password" />
-              <Button type="submit" className="w-full">
-                Sign-In
-              </Button>
-            </form>
+            <FormInput
+              handleSubmit={handleSignIn}
+              isButtonLoading={loading}
+              buttonTitle={"Sign In"}
+              formControls={signInFormInput}
+              formData={signInForm}
+              setFormData={setSignInForm}
+              isButtonDisabled={!isFormFilled()}
+            />
             <Button className="w-full">
               <FcGoogle /> <span>Sign-in with google</span>
             </Button>

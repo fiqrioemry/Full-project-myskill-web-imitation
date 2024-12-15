@@ -1,34 +1,21 @@
 import { authPath } from "../../config";
-import {
-  GraduationCap,
-  LayoutDashboard,
-  LogOut,
-  UserCircle,
-} from "lucide-react";
+import { GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useGlobal } from "../../context/GlobalProvider";
-
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-  DropdownMenuItem,
-  DropdownMenuShortcut,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
+import { useAuth } from "../../context/AuthProvider";
+import DropDownMenu from "./DropDownMenu";
 
 const Header = () => {
-  const location = useLocation();
-  const { user, handleSignOut } = useGlobal();
+  const { handleSignOut } = useAuth();
+  const { user, currentPath } = useGlobal();
 
   return (
     <header className="border-b">
       <div className="container mx-auto flex items-center justify-between h-14">
         {/* Web logo */}
-        {authPath.includes(location.pathname) ? (
+        {authPath.includes(currentPath) ? (
           <div className="px-4">
             <SidebarTrigger />
           </div>
@@ -46,36 +33,8 @@ const Header = () => {
             <Link to="/e-learning">E-Learning</Link>
           </nav>
           {user ? (
-            // Authenticated display
-            <div className="px-6">
-              <DropdownMenu className="right-12">
-                <DropdownMenuTrigger>
-                  <UserCircle />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="min-w-56 p-3">
-                  <DropdownMenuLabel>john doe</DropdownMenuLabel>
-                  <DropdownMenuLabel className="font-normal">
-                    johndoe@gmail.com
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <Link to="/dashboard/my-profile">
-                    <DropdownMenuItem>
-                      Profile
-                      <DropdownMenuShortcut>
-                        <LayoutDashboard />
-                      </DropdownMenuShortcut>
-                    </DropdownMenuItem>
-                  </Link>
-
-                  <DropdownMenuItem onClick={handleSignOut}>
-                    Logout
-                    <DropdownMenuShortcut>
-                      <LogOut />
-                    </DropdownMenuShortcut>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
+            // authenticated display
+            <DropDownMenu user={user} handleSignOut={handleSignOut} />
           ) : (
             // Non-authenticated display
             <div className="flex space-x-3">

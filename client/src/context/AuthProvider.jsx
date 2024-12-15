@@ -1,40 +1,62 @@
-import { createContext, useContext, useState } from "react";
+/* eslint-disable react/prop-types */
+/* eslint-disable react-refresh/only-export-components */
+import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
+import { toastMessage } from "../hooks/toastMessage";
 import { signInFormData, signUpFormData } from "@/config";
-
-import { toast } from "react-toastify";
-import { userSignUp } from "../services";
+import { createContext, useContext, useState } from "react";
+import { userSignIn, userSignOut, userSignUp } from "../services";
 
 const AuthContext = createContext();
 
-// eslint-disable-next-line react/prop-types
 export const AuthProvider = ({ children }) => {
+  const navigate = useNavigate();
   const [signUpForm, setSignUpForm] = useState(signUpFormData);
   const [signInForm, setSignInForm] = useState(signInFormData);
   const [loading, setLoading] = useState(false);
 
+  // sign-up
   async function handleSignUp(e) {
     e.preventDefault();
     setLoading(true);
+    const result = await userSignUp(signUpForm);
 
-    const data = await userSignUp(signUpForm);
-    console.log(data);
-    if (data.success) {
-      toast.success(data.message);
-      setLoading(false);
+    setLoading(false);
+    toastMessage(result.success, result.message);
+    if (result.success) {
+      navigate("/sign-in");
     } else {
-      toast.error(data.message);
-      setLoading(false);
+      setSignUpForm(signUpFormData);
     }
   }
 
+  // sign-in
   async function handleSignIn(e) {
     e.preventDefault();
-    console.log("signin");
+    setLoading(true);
+
+    const result = await userSignIn(signInForm);
+
+    setLoading(false);
+    toastMessage(result.success, result.message);
+    if (result.success && result.data) {
+      Cookies.set("accessToken", result.data.accessToken, {
+        expires: 1 / 24,
+      });
+      Cookies.set("user", JSON.stringify(result.data.user));
+      navigate("/");
+    } else {
+      setSignInForm(signInFormData);
+    }
   }
 
-  async function handleSignOut(e) {
-    e.preventDefault();
-    console.log("signout");
+  async function handleSignOut() {
+    setLoading(true);
+    const result = await userSignOut();
+    Cookies.remove("user");
+    Cookies.remove("accessToken");
+    toastMessage(result.succes, result.message);
+    setLoading(false);
   }
   return (
     <AuthContext.Provider
@@ -55,7 +77,6 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
   return useContext(AuthContext);
 };
