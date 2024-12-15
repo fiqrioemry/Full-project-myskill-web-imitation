@@ -1,0 +1,6 @@
+// get user profile
+export const GET_PROFILE_SUCCESS = "GET_PROFILE_SUCCESS";
+export const GET_PROFILE_PROCESS = "GET_PROFILE_PROCESS";
+export const GET_PROFILE_FAILED = "GET_PROFILE_FAILED";
+
+export const RESET_AUTH = "RESET_AUTH";

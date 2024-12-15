@@ -27,6 +27,7 @@ export function userSignUp(formData) {
       const result = await axiosInstance.post("/api/auth/sign-up", {
         ...formData,
       });
+
       dispatch({ type: REGISTER_SUCCESS, payload: result.data });
     } catch (error) {
       dispatch({ type: REGISTER_FAILED, payload: error.response.data });
