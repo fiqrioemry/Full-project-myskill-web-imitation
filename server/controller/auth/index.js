@@ -111,7 +111,7 @@ async function userSignIn(req, res) {
     });
 
     return res.status(200).send({
-      success: false,
+      success: true,
       message: "Login is success",
       data: {
         accessToken,
@@ -127,4 +127,22 @@ async function userSignIn(req, res) {
   }
 }
 
-module.exports = { userSignUp, userSignIn };
+async function userSignOut(req, res) {
+  try {
+    delete req.headers.authorization;
+
+    res.clearCookie("refreshToken");
+
+    return res.status(200).send({
+      success: true,
+      message: "Logout is Success",
+    });
+  } catch (error) {
+    return res.status(500).send({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+}
+
+module.exports = { userSignUp, userSignIn, userSignOut };

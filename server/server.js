@@ -31,6 +31,7 @@ mongoose
 
 // api configuration
 app.use("/api/auth", services.authRoute);
+app.use("/api/user", services.userRoute);
 
 // port console
 app.listen(PORT, () => {
