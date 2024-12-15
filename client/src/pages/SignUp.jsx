@@ -8,14 +8,15 @@ import {
 } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
-
+import { signUpFormInput } from "../config";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "../context/AuthProvider";
+import { useGlobal } from "../context/GlobalProvider";
 import FormInput from "../components/common/common-form/FormInput";
-import { signUpFormInput } from "../config";
 
 const SignUp = () => {
-  const { signUpForm, setSignUpForm, handleSignUp, loading } = useAuth();
+  const { loading } = useGlobal();
+  const { signUpForm, setSignUpForm, handleSignUp } = useAuth();
 
   function isFormFilled() {
     return (

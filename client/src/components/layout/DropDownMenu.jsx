@@ -10,8 +10,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Link } from "react-router-dom";
 import { LayoutDashboard, LogOut, UserCircle } from "lucide-react";
+import { useGlobal } from "../../context/GlobalProvider";
+import { useAuth } from "../../context/AuthProvider";
 
-const DropDownMenu = ({ user, handleSignOut }) => {
+const DropDownMenu = () => {
+  const { handleSignOut } = useAuth();
+  const { user, loading } = useGlobal();
   return (
     <div className="px-6">
       <DropdownMenu className="right-12">
@@ -35,7 +39,7 @@ const DropDownMenu = ({ user, handleSignOut }) => {
           </Link>
 
           <DropdownMenuItem onClick={handleSignOut}>
-            Logout
+            {loading ? "loading" : "Sign-out"}
             <DropdownMenuShortcut>
               <LogOut />
             </DropdownMenuShortcut>

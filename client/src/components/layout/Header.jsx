@@ -1,14 +1,12 @@
+import { Link } from "react-router-dom";
 import { authPath } from "../../config";
+import DropDownMenu from "./DropDownMenu";
 import { GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useGlobal } from "../../context/GlobalProvider";
-import { useAuth } from "../../context/AuthProvider";
-import DropDownMenu from "./DropDownMenu";
 
 const Header = () => {
-  const { handleSignOut } = useAuth();
   const { user, currentPath } = useGlobal();
 
   return (
@@ -34,7 +32,7 @@ const Header = () => {
           </nav>
           {user ? (
             // authenticated display
-            <DropDownMenu user={user} handleSignOut={handleSignOut} />
+            <DropDownMenu />
           ) : (
             // Non-authenticated display
             <div className="flex space-x-3">
