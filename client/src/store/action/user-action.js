@@ -6,7 +6,6 @@ import {
   GET_PROFILE_FAILED,
 
   // update profile
-  UPDATE_PROFILE_PROCESS,
   UPDATE_PROFILE_SUCCESS,
   UPDATE_PROFILE_FAILED,
 
@@ -32,12 +31,9 @@ export function getUserProfile() {
 export function updateUserProfile(formData) {
   return async function (dispatch) {
     try {
-      dispatch({ type: UPDATE_PROFILE_PROCESS });
-
       const result = await axiosInstance.put("/api/user/profile/update", {
         ...formData,
       });
-
       dispatch({ type: UPDATE_PROFILE_SUCCESS, payload: result.data });
     } catch (error) {
       dispatch({ type: UPDATE_PROFILE_FAILED, payload: error.response.data });

@@ -16,7 +16,6 @@ import {
   LOGOUT_FAILED,
 
   // refresh
-  REFRESH_PROCESS,
   REFRESH_SUCCESS,
   REFRESH_FAILED,
 
@@ -78,7 +77,6 @@ export function userSignOut() {
 export function userRefresh() {
   return async function (dispatch) {
     try {
-      dispatch({ type: REFRESH_PROCESS });
       const result = await axiosInstance.post("/api/auth/refresh");
       dispatch({ type: REFRESH_SUCCESS, payload: result.data.data });
     } catch (error) {

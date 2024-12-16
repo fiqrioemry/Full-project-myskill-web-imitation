@@ -1,10 +1,12 @@
 /* eslint-disable react/prop-types */
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
+  userRefresh,
   userSignIn,
   userSignOut,
   userSignUp,
 } from "../store/action/auth-action";
+import Cookies from "js-cookie";
 import { signInFormData, signUpFormData } from "@/config";
 import { createContext, useContext, useEffect, useState } from "react";
 
@@ -12,7 +14,7 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const dispatch = useDispatch();
-  const { user, accessToken, loading } = useSelector((state) => state.auth);
+  const accessToken = Cookies.get("user") || null;
   const [signUpForm, setSignUpForm] = useState(signUpFormData);
   const [signInForm, setSignInForm] = useState(signInFormData);
 
@@ -36,11 +38,10 @@ export const AuthProvider = ({ children }) => {
   }
 
   useEffect(() => {
-    if (!accessToken || !user) {
-      console.log("RUN ONLY ONE");
-      dispatch(user);
+    if (!accessToken) {
+      dispatch(userRefresh());
     }
-  }, [dispatch, user, accessToken]);
+  }, [dispatch, accessToken]);
 
   return (
     <AuthContext.Provider
@@ -54,13 +55,7 @@ export const AuthProvider = ({ children }) => {
         setSignInForm,
       }}
     >
-      {loading ? (
-        <section className="h-screen flex items-center justify-center">
-          <h1>page loading ...</h1>
-        </section>
-      ) : (
-        children
-      )}
+      {children}
     </AuthContext.Provider>
   );
 };
