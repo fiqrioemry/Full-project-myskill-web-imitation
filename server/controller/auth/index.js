@@ -103,22 +103,22 @@ async function userSignIn(req, res) {
       await tokenData.save();
     }
 
-    // set token as req cookie
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "Strict",
-      maxAge: 24 * 30 * 60 * 60 * 1000,
-    });
-
-    return res.status(200).send({
-      success: true,
-      message: "Login is success",
-      data: {
-        accessToken,
-        user: { userId, userName, userEmail, userRole },
-      },
-    });
+    return res
+      .status(200)
+      .cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+        maxAge: 24 * 30 * 60 * 60 * 1000,
+      })
+      .send({
+        success: true,
+        message: "Login is success",
+        data: {
+          accessToken,
+          user: { userId, userName, userEmail, userRole },
+        },
+      });
   } catch (error) {
     res.status(500).send({
       success: false,
@@ -151,7 +151,7 @@ async function userRefreshToken(req, res) {
     const { refreshToken } = req.cookies;
 
     if (!refreshToken) {
-      return res.status(401).send({ message: "Session Expired, Please Login" });
+      return res.status(401).send({ message: "Session expired, please login" });
     }
 
     const refreshTokenData = await Token.findOne({ refreshToken });
@@ -160,14 +160,26 @@ async function userRefreshToken(req, res) {
       return res.status(403).send({ message: "Unauthorized Access !!!" });
     }
 
-    const payload = jwt.verify(refreshToken, process.env.REFRESH_TOKEN);
+    const user = jwt.verify(refreshToken, process.env.REFRESH_TOKEN);
+
+    const payload = {
+      userId: user.userId,
+      userName: user.userName,
+      userEmail: user.userEmail,
+      userRole: user.userRole,
+    };
 
     const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN, {
       expiresIn: "1h",
     });
-    res
-      .status(200)
-      .send({ success: true, data: { accessToken, user: payload } });
+
+    res.status(200).send({
+      success: true,
+      data: {
+        accessToken: accessToken,
+        user: payload,
+      },
+    });
   } catch (error) {
     return res.status(500).send(error.message);
   }
