@@ -1,17 +1,18 @@
 /* eslint-disable react/prop-types */
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   userSignIn,
   userSignOut,
   userSignUp,
 } from "../store/action/auth-action";
 import { signInFormData, signUpFormData } from "@/config";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const dispatch = useDispatch();
+  const { user, accessToken, loading } = useSelector((state) => state.auth);
   const [signUpForm, setSignUpForm] = useState(signUpFormData);
   const [signInForm, setSignInForm] = useState(signInFormData);
 
@@ -34,6 +35,13 @@ export const AuthProvider = ({ children }) => {
     dispatch(userSignOut());
   }
 
+  useEffect(() => {
+    if (!accessToken || !user) {
+      console.log("RUN ONLY ONE");
+      dispatch(user);
+    }
+  }, [dispatch, user, accessToken]);
+
   return (
     <AuthContext.Provider
       value={{
@@ -46,7 +54,13 @@ export const AuthProvider = ({ children }) => {
         setSignInForm,
       }}
     >
-      {children}
+      {loading ? (
+        <section className="h-screen flex items-center justify-center">
+          <h1>page loading ...</h1>
+        </section>
+      ) : (
+        children
+      )}
     </AuthContext.Provider>
   );
 };

@@ -1,7 +1,7 @@
 import { Toaster } from "react-hot-toast";
+import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { createContext, useContext } from "react";
-import { useSelector } from "react-redux";
 
 const GlobalContext = createContext();
 

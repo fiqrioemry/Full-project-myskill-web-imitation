@@ -16,6 +16,7 @@ import {
   LOGOUT_SUCCESS,
 
   // refresh
+  REFRESH_PROCESS,
   REFRESH_SUCCESS,
   REFRESH_FAILED,
 
@@ -23,10 +24,9 @@ import {
   RESET_AUTH,
 } from "../constant/auth-constant";
 
-import Cookies from "js-cookie";
-
 const initialState = {
-  user: JSON.parse(localStorage.getItem("user")) || null,
+  user: null,
+  accessToken: null,
   loading: false,
   success: false,
   message: null,
@@ -58,13 +58,10 @@ export const authReducer = (state = initialState, action) => {
       return { ...state, loading: true };
 
     case LOGIN_SUCCESS: {
-      Cookies.set("accessToken", action.payload.data.accessToken, {
-        expires: 1 / 24,
-      });
-      localStorage.setItem("user", JSON.stringify(action.payload.data.user));
       return {
         ...state,
         user: action.payload.data.user,
+        accessToken: action.payload.data.accessToken,
         success: action.payload.success,
         message: action.payload.message,
       };
@@ -82,11 +79,10 @@ export const authReducer = (state = initialState, action) => {
       return { ...state, loading: true };
 
     case LOGOUT_SUCCESS: {
-      Cookies.remove("accessToken");
-      localStorage.removeItem("user");
       return {
         ...state,
         user: null,
+        accessToken: null,
         success: action.payload.success,
         message: action.payload.message,
       };
@@ -100,19 +96,21 @@ export const authReducer = (state = initialState, action) => {
       };
 
     // * REFRESH ------------------------------------------------------------
+    case REFRESH_PROCESS:
+      return { ...state, loading: true };
+
     case REFRESH_SUCCESS:
-      Cookies.set("accessToken", action.payload.accessToken, {
-        expires: 1 / 24,
-      });
-      localStorage.setItem("user", JSON.stringify(action.payload.data.user));
-      return { ...state, user: action.payload.user };
+      return {
+        ...state,
+        accessToken: action.payload.accessToken,
+        user: action.payload.user,
+      };
 
     case REFRESH_FAILED: {
-      Cookies.remove("accessToken");
-      localStorage.removeItem("user");
       return {
         ...state,
         user: null,
+        accessToken: null,
       };
     }
 

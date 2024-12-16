@@ -13,7 +13,8 @@ export const LOGOUT_SUCCESS = "LOGOUT_SUCCESS";
 export const LOGOUT_PROCESS = "LOGOUT_PROCESS";
 export const LOGOUT_FAILED = "LOGOUT_FAILED";
 
-// sign-out
+// refresh
+export const REFRESH_PROCESS = "REFRESH_PROCESS";
 export const REFRESH_SUCCESS = "REFRESH_SUCCESS";
 export const REFRESH_FAILED = "REFRESH_FAILED";
 
