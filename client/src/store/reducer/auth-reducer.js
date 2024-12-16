@@ -14,6 +14,12 @@ import {
   LOGOUT_PROCESS,
   LOGOUT_FAILED,
   LOGOUT_SUCCESS,
+
+  // refresh
+  REFRESH_SUCCESS,
+  REFRESH_FAILED,
+
+  // reset
   RESET_AUTH,
 } from "../constant/auth-constant";
 
@@ -52,10 +58,10 @@ export const authReducer = (state = initialState, action) => {
       return { ...state, loading: true };
 
     case LOGIN_SUCCESS: {
-      localStorage.setItem("user", JSON.stringify(action.payload.data.user));
       Cookies.set("accessToken", action.payload.data.accessToken, {
         expires: 1 / 24,
       });
+      localStorage.setItem("user", JSON.stringify(action.payload.data.user));
       return {
         ...state,
         user: action.payload.data.user,
@@ -76,8 +82,8 @@ export const authReducer = (state = initialState, action) => {
       return { ...state, loading: true };
 
     case LOGOUT_SUCCESS: {
-      localStorage.removeItem("user");
       Cookies.remove("accessToken");
+      localStorage.removeItem("user");
       return {
         ...state,
         user: null,
@@ -92,6 +98,23 @@ export const authReducer = (state = initialState, action) => {
         success: action.payload.success,
         message: action.payload.message,
       };
+
+    // * REFRESH ------------------------------------------------------------
+    case REFRESH_SUCCESS:
+      Cookies.set("accessToken", action.payload.accessToken, {
+        expires: 1 / 24,
+      });
+      localStorage.setItem("user", JSON.stringify(action.payload.data.user));
+      return { ...state, user: action.payload.user };
+
+    case REFRESH_FAILED: {
+      Cookies.remove("accessToken");
+      localStorage.removeItem("user");
+      return {
+        ...state,
+        user: null,
+      };
+    }
 
     case RESET_AUTH:
       toastMessage(state.success, state.message);

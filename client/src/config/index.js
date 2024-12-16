@@ -100,3 +100,57 @@ export const signUpFormInput = [
     type: "password",
   },
 ];
+
+// sign up form
+export const userProfileFormData = {
+  fullname: "",
+  phone: "",
+  location: "",
+  profession: "",
+  opportunity: "",
+  linkCV: "",
+};
+export const userProfileFormInput = [
+  {
+    componentType: "input",
+    name: "fullname",
+    label: "fullname",
+    placeholder: "",
+    type: "text",
+  },
+  {
+    componentType: "input",
+    name: "phone",
+    label: "Phone",
+    placeholder: "",
+    type: "text",
+  },
+  {
+    componentType: "input",
+    name: "location",
+    label: "Location",
+    placeholder: "",
+    type: "text",
+  },
+  {
+    componentType: "input",
+    name: "profession",
+    label: "Profession",
+    placeholder: "",
+    type: "text",
+  },
+  {
+    componentType: "input",
+    name: "opportunity",
+    label: "Oportunity Looking",
+    placeholder: "",
+    type: "text",
+  },
+  {
+    componentType: "input",
+    name: "linkCV",
+    label: "Link CV",
+    placeholder: "",
+    type: "text",
+  },
+];

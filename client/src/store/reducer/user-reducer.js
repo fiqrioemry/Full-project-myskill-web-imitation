@@ -9,7 +9,9 @@ import {
   UPDATE_PROFILE_PROCESS,
   UPDATE_PROFILE_FAILED,
   UPDATE_PROFILE_SUCCESS,
-  RESET_AUTH,
+
+  // reset
+  RESET_PROFILE,
 } from "../constant/user-constant";
 
 const initialState = {
@@ -23,7 +25,7 @@ export const userReducer = (state = initialState, action) => {
   switch (action.type) {
     // * GET USER PROFILE ------------------------------------------------------------
     case GET_PROFILE_PROCESS:
-      return { ...state, loading: true };
+      return { ...state };
 
     case GET_PROFILE_SUCCESS: {
       return {
@@ -35,8 +37,6 @@ export const userReducer = (state = initialState, action) => {
     case GET_PROFILE_FAILED:
       return {
         ...state,
-        success: action.payload.success,
-        message: action.payload.message,
       };
 
     // * UPDATE USER PROFILE ------------------------------------------------------------
@@ -47,6 +47,8 @@ export const userReducer = (state = initialState, action) => {
       return {
         ...state,
         profile: action.payload.data,
+        success: action.payload.success,
+        message: action.payload.message,
       };
     }
 
@@ -57,7 +59,7 @@ export const userReducer = (state = initialState, action) => {
         message: action.payload.message,
       };
 
-    case RESET_AUTH:
+    case RESET_PROFILE:
       toastMessage(state.success, state.message);
       return {
         ...state,

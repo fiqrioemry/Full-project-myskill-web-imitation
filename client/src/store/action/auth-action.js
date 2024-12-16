@@ -14,6 +14,8 @@ import {
   LOGOUT_PROCESS,
   LOGOUT_SUCCESS,
   LOGOUT_FAILED,
+  REFRESH_SUCCESS,
+  REFRESH_FAILED,
 
   //reset state
   RESET_AUTH,
@@ -64,6 +66,19 @@ export function userSignOut() {
       dispatch({ type: LOGOUT_SUCCESS, payload: result.data });
     } catch (error) {
       dispatch({ type: LOGOUT_FAILED, payload: error.response.data });
+    } finally {
+      dispatch({ type: RESET_AUTH });
+    }
+  };
+}
+
+export function userRefresh() {
+  return async function (dispatch) {
+    try {
+      const result = await axiosInstance.post("/api/auth/refresh");
+      dispatch({ type: REFRESH_SUCCESS, payload: result.data.data });
+    } catch (error) {
+      dispatch({ type: REFRESH_FAILED, payload: error.response.data });
     } finally {
       dispatch({ type: RESET_AUTH });
     }

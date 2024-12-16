@@ -11,7 +11,7 @@ import {
   UPDATE_PROFILE_FAILED,
 
   //reset state
-  RESET_AUTH,
+  RESET_PROFILE,
 } from "../constant/user-constant";
 
 export function getUserProfile() {
@@ -20,12 +20,11 @@ export function getUserProfile() {
       dispatch({ type: GET_PROFILE_PROCESS });
 
       const result = await axiosInstance.get("/api/user/profile");
-
       dispatch({ type: GET_PROFILE_SUCCESS, payload: result.data });
     } catch (error) {
       dispatch({ type: GET_PROFILE_FAILED, payload: error.response.data });
     } finally {
-      dispatch({ type: RESET_AUTH });
+      dispatch({ type: RESET_PROFILE });
     }
   };
 }
@@ -35,7 +34,7 @@ export function updateUserProfile(formData) {
     try {
       dispatch({ type: UPDATE_PROFILE_PROCESS });
 
-      const result = await axiosInstance.post("/api/user/profile/update", {
+      const result = await axiosInstance.put("/api/user/profile/update", {
         ...formData,
       });
 
@@ -43,7 +42,7 @@ export function updateUserProfile(formData) {
     } catch (error) {
       dispatch({ type: UPDATE_PROFILE_FAILED, payload: error.response.data });
     } finally {
-      dispatch({ type: RESET_AUTH });
+      dispatch({ type: RESET_PROFILE });
     }
   };
 }
