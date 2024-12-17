@@ -18,11 +18,13 @@ import {
   // refresh
   REFRESH_SUCCESS,
   REFRESH_FAILED,
+  REFRESH_PROCESS,
 
   //reset state
   RESET_AUTH,
 } from "../constant/auth-constant";
 
+// user sign-up
 export function userSignUp(formData) {
   return async function (dispatch) {
     try {
@@ -41,6 +43,7 @@ export function userSignUp(formData) {
   };
 }
 
+// user sign-in
 export function userSignIn(formData) {
   return async function (dispatch) {
     try {
@@ -49,6 +52,7 @@ export function userSignIn(formData) {
       const result = await axiosInstance.post("/api/auth/sign-in", {
         ...formData,
       });
+
       dispatch({ type: LOGIN_SUCCESS, payload: result.data });
     } catch (error) {
       dispatch({ type: LOGIN_FAILED, payload: error.response.data });
@@ -58,6 +62,7 @@ export function userSignIn(formData) {
   };
 }
 
+// user sign-out
 export function userSignOut() {
   return async function (dispatch) {
     try {
@@ -74,9 +79,11 @@ export function userSignOut() {
   };
 }
 
+// refresh token
 export function userRefresh() {
   return async function (dispatch) {
     try {
+      dispatch({ type: REFRESH_PROCESS });
       const result = await axiosInstance.post("/api/auth/refresh");
       dispatch({ type: REFRESH_SUCCESS, payload: result.data.data });
     } catch (error) {

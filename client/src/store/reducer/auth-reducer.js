@@ -18,6 +18,7 @@ import {
   // refresh
   REFRESH_SUCCESS,
   REFRESH_FAILED,
+  REFRESH_PROCESS,
 
   // reset
   RESET_AUTH,
@@ -26,7 +27,8 @@ import {
 import Cookies from "js-cookie";
 
 const initialState = {
-  user: JSON.parse(localStorage.getItem("user")) || null,
+  user: null,
+  isAuthenticate: false,
   loading: false,
   success: false,
   message: "",
@@ -61,9 +63,11 @@ export const authReducer = (state = initialState, action) => {
       Cookies.set("accessToken", action.payload.data.accessToken, {
         expires: 1 / 24,
       });
-      localStorage.setItem("user", JSON.stringify(action.payload.data.user));
+
       return {
         ...state,
+        isAuthenticate: true,
+        user: action.payload.data.user,
         success: action.payload.success,
         message: action.payload.message,
       };
@@ -82,9 +86,10 @@ export const authReducer = (state = initialState, action) => {
 
     case LOGOUT_SUCCESS: {
       Cookies.remove("accessToken");
-      localStorage.removeItem("user");
       return {
         ...state,
+        user: "",
+        isAuthenticate: false,
         success: action.payload.success,
         message: action.payload.message,
       };
@@ -98,19 +103,22 @@ export const authReducer = (state = initialState, action) => {
       };
 
     // * REFRESH ------------------------------------------------------------
+    case REFRESH_PROCESS:
+      return { ...state, loading: true };
 
     case REFRESH_SUCCESS:
       Cookies.set("accessToken", action.payload.accessToken, {
         expires: 1 / 24,
       });
-      localStorage.setItem("user", JSON.stringify(action.payload.user));
-      return { ...state };
+
+      return { ...state, isAuthenticate: true, user: action.payload.user };
 
     case REFRESH_FAILED: {
       Cookies.remove("accessToken");
-      localStorage.removeItem("user");
       return {
         ...state,
+        user: "",
+        isAuthenticate: false,
       };
     }
 

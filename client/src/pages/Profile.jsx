@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import FormInput from "../components/common/common-form/FormInput";
 import { userProfileFormData, userProfileFormInput } from "../config";
 import { getUserProfile, updateUserProfile } from "../store/action/user-action";
+import { userRefresh } from "../store/action/auth-action";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -14,9 +15,15 @@ const Profile = () => {
   }
 
   useEffect(() => {
-    if (!profile) {
-      dispatch(getUserProfile());
-    } else {
+    dispatch(userRefresh());
+  }, []);
+
+  useEffect(() => {
+    dispatch(getUserProfile());
+  }, [dispatch, profile]);
+
+  useEffect(() => {
+    if (profile) {
       setUserProfile({ ...profile });
     }
   }, [dispatch, profile]);
@@ -28,13 +35,13 @@ const Profile = () => {
 
   return (
     <main className="container mx-auto">
-      {!userProfile ? (
+      {!userProfile || userProfile.length === 0 ? (
         <section className="h-screen flex items-center justify-center">
           <h1>LOADING...</h1>
         </section>
       ) : (
         <section className="h-screen py-3 px-6 space-y-3">
-          <h3>Welcome, {profile ? profile.fullname : userProfile.fullname}</h3>
+          <h3>Welcome, {userProfile.fullname}</h3>
           <span>
             Information about your profile and preferences across LearningSphere
             services.

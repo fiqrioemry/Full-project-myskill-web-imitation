@@ -1,11 +1,12 @@
 /* eslint-disable react/prop-types */
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   userRefresh,
   userSignIn,
   userSignOut,
   userSignUp,
 } from "../store/action/auth-action";
+
 import Cookies from "js-cookie";
 import { signInFormData, signUpFormData } from "@/config";
 import { createContext, useContext, useEffect, useState } from "react";
@@ -14,10 +15,10 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const dispatch = useDispatch();
-  const accessToken = Cookies.get("user") || null;
+  const accessToken = Cookies.get("accessToken");
   const [signUpForm, setSignUpForm] = useState(signUpFormData);
   const [signInForm, setSignInForm] = useState(signInFormData);
-
+  const { user, isAuthenticate, loading } = useSelector((state) => state.auth);
   // sign-up
   async function handleSignUp(e) {
     e.preventDefault();
@@ -37,10 +38,9 @@ export const AuthProvider = ({ children }) => {
     dispatch(userSignOut());
   }
 
+  // refresh token
   useEffect(() => {
-    if (!accessToken) {
-      dispatch(userRefresh());
-    }
+    dispatch(userRefresh());
   }, [dispatch, accessToken]);
 
   return (
@@ -53,9 +53,12 @@ export const AuthProvider = ({ children }) => {
         setSignUpForm,
         signInForm,
         setSignInForm,
+        isAuthenticate,
+        user,
+        loading,
       }}
     >
-      {children}
+      {user === null ? null : children}
     </AuthContext.Provider>
   );
 };

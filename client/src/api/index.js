@@ -9,11 +9,13 @@ export const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   (config) => {
-    const accessToken = Cookies.get("accessToken") || null;
+    const accessToken = Cookies.get("accessToken");
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
     }
     return config;
   },
-  (err) => Promise.reject(err)
+  (error) => Promise.reject(error)
 );
+
+export default axiosInstance;

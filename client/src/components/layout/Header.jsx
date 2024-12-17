@@ -3,11 +3,13 @@ import { authPath } from "../../config";
 import DropDownMenu from "./DropDownMenu";
 import { GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { SidebarTrigger } from "@/components/ui/sidebar";
+import { useAuth } from "../../context/AuthProvider";
 import { useGlobal } from "../../context/GlobalProvider";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 
 const Header = () => {
-  const { user, currentPath } = useGlobal();
+  const { user } = useAuth();
+  const { currentPath } = useGlobal();
 
   return (
     <header className="border-b">

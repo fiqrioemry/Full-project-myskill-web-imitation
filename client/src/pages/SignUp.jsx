@@ -11,12 +11,10 @@ import { FcGoogle } from "react-icons/fc";
 import { signUpFormInput } from "../config";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "../context/AuthProvider";
-import { useGlobal } from "../context/GlobalProvider";
 import FormInput from "../components/common/common-form/FormInput";
 
 const SignUp = () => {
-  const { loading } = useGlobal();
-  const { signUpForm, setSignUpForm, handleSignUp } = useAuth();
+  const { signUpForm, loading, setSignUpForm, handleSignUp } = useAuth();
 
   function isFormFilled() {
     return (

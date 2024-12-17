@@ -9,13 +9,11 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { Link } from "react-router-dom";
-import { LayoutDashboard, LogOut, UserCircle } from "lucide-react";
-import { useGlobal } from "../../context/GlobalProvider";
 import { useAuth } from "../../context/AuthProvider";
+import { LayoutDashboard, LogOut, UserCircle } from "lucide-react";
 
 const DropDownMenu = () => {
-  const { handleSignOut } = useAuth();
-  const { user, loading } = useGlobal();
+  const { handleSignOut, user, loading } = useAuth();
   return (
     <div className="px-6">
       <DropdownMenu className="right-12">

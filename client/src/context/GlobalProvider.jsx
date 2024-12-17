@@ -1,5 +1,4 @@
 import { Toaster } from "react-hot-toast";
-import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { createContext, useContext } from "react";
 
@@ -9,10 +8,9 @@ const GlobalContext = createContext();
 export const GlobalProvider = ({ children }) => {
   const location = useLocation();
   const currentPath = location.pathname;
-  const { user, loading } = useSelector((state) => state.auth);
 
   return (
-    <GlobalContext.Provider value={{ user, loading, currentPath }}>
+    <GlobalContext.Provider value={{ currentPath }}>
       {children}
       <Toaster />
     </GlobalContext.Provider>

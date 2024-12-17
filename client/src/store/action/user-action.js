@@ -19,6 +19,7 @@ export function getUserProfile() {
       dispatch({ type: GET_PROFILE_PROCESS });
 
       const result = await axiosInstance.get("/api/user/profile");
+
       dispatch({ type: GET_PROFILE_SUCCESS, payload: result.data });
     } catch (error) {
       dispatch({ type: GET_PROFILE_FAILED, payload: error.response.data });
