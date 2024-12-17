@@ -16,7 +16,7 @@ const Profile = () => {
 
   useEffect(() => {
     dispatch(userRefresh());
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     dispatch(getUserProfile());
