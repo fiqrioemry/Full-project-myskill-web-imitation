@@ -154,3 +154,12 @@ export const userProfileFormInput = [
     type: "text",
   },
 ];
+
+// courses data :
+
+export const courseCategoryList = [
+  {
+    categoryId: 1,
+    courseName: "Machine learning",
+  },
+];
