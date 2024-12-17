@@ -9,37 +9,37 @@ const HistorySchema = new mongoose.Schema(
     },
     courseId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "MainCourse",
+      ref: "Course",
       required: true,
     },
     topicId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Topic", // Menghubungkan dengan Topic
+      ref: "Topic",
       required: true,
     },
     subtopicProgress: [
       {
         subtopicId: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: "SubTopic", // Menghubungkan dengan SubTopic
+          ref: "SubTopic",
           required: true,
         },
         status: {
           type: String,
           enum: ["completed", "in-progress"],
-          default: "in-progress", // Status subtopic
+          default: "in-progress",
         },
-        watchedAt: { type: Date }, // Waktu terakhir ditonton
+        watchedAt: { type: Date },
       },
     ],
     progress: {
-      type: Number, // Persentase progress (0-100%)
+      type: Number,
       default: 0,
     },
     status: {
       type: String,
       enum: ["in-progress", "completed"],
-      default: "in-progress", // Status keseluruhan
+      default: "in-progress",
     },
     updatedAt: {
       type: Date,
@@ -47,6 +47,6 @@ const HistorySchema = new mongoose.Schema(
     },
   },
   { timestamps: true }
-); // Mengaktifkan createdAt & updatedAt otomatis
+);
 
 module.exports = mongoose.model("History", HistorySchema);
