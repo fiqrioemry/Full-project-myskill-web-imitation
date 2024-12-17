@@ -77,7 +77,7 @@ async function userSignIn(req, res) {
       { userId, userName, userEmail, userRole },
       process.env.ACCESS_TOKEN,
       {
-        expiresIn: "1h",
+        expiresIn: "15m",
       }
     );
 
@@ -170,7 +170,7 @@ async function userRefreshToken(req, res) {
     };
 
     const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN, {
-      expiresIn: "1h",
+      expiresIn: "15m",
     });
 
     res.status(200).send({
