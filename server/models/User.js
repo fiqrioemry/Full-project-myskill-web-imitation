@@ -5,12 +5,7 @@ const UserSchema = new mongoose.Schema(
     email: { type: String, require: true, unique: true },
     password: { type: String, require: true },
     role: { type: String, enum: ["student", "admin"] },
-    token: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Token",
-      },
-    ],
+    token: String,
     subscription: [
       {
         type: mongoose.Schema.Types.ObjectId,

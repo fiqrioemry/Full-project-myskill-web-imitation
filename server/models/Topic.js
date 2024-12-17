@@ -1,14 +1,22 @@
+const mongoose = require("mongoose");
+
+const SubtopicSchema = new mongoose.Schema(
+  {
+    name: String,
+    description: String,
+    preview: Boolean,
+    videoUrl: String,
+    duration: String,
+  },
+  { timestamps: true }
+);
+
 const TopicSchema = new mongoose.Schema(
   {
     name: String,
     instructor: String,
     description: String,
-    subtopics: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Subtopic",
-      },
-    ],
+    subtopics: [{ SubtopicSchema }],
   },
   { timestamps: true }
 );

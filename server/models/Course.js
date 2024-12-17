@@ -13,6 +13,6 @@ const CourseSchema = new mongoose.Schema(
     ],
   },
   { timestamps: true }
-); // Tambahkan createdAt dan updatedAt otomatis
+);
 
 module.exports = mongoose.model("Course", CourseSchema);
