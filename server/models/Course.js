@@ -7,7 +7,6 @@ const CourseSchema = new mongoose.Schema(
       ref: "CourseCategory",
     },
     courseName: String,
-    courseDescription: String,
   },
   { timestamps: true }
 );

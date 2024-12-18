@@ -8,20 +8,6 @@ const CourseCategory = require("../../models/CourseCategory");
 const { uploadMediaToCloudinary } = require("../../utils/Cloudinary");
 const { courseRoute } = require("../../routes");
 
-async function getAllCategory(req, res) {
-  try {
-    const categoryData = await CourseCategory.findAll();
-
-    return res.status(200).send({ success: true, data: categoryData });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Failed to get category",
-      error: error.message,
-    });
-  }
-}
-
 async function createCourseCategory(req, res) {
   try {
     const file = req.file;
@@ -51,34 +37,27 @@ async function createCourseCategory(req, res) {
       data: courseCategoryData,
     });
   } catch (error) {
-    return res.status(500).send({
-      success: false,
-      message: "Internal Server Error ",
-      error: error.message,
-    });
+    handleError(res, error, "Failed to create course category");
   }
 }
 
 async function updateCourseCategory(req, res) {
   try {
     const { id } = req.params;
-    const file = req.file;
     const { name, description } = req.body;
-
-    const slug = name ? createSlug(name) : undefined;
+    const file = req.file;
 
     const courseCategory = await CourseCategory.findById(id);
-
     if (!courseCategory) {
-      return res
-        .status(404)
-        .send({ success: false, message: "Course category not found" });
+      return res.status(404).send({
+        success: false,
+        message: "Course category not found",
+      });
     }
 
-    // Periksa apakah slug baru sudah ada (jika nama diubah)
-    if (slug && slug !== courseCategory.slug) {
+    const slug = name ? createSlug(name) : courseCategory.slug;
+    if (slug !== courseCategory.slug) {
       const existCategory = await CourseCategory.findOne({ slug });
-
       if (existCategory) {
         return res.status(400).send({
           success: false,
@@ -87,32 +66,36 @@ async function updateCourseCategory(req, res) {
       }
     }
 
-    // Upload gambar ke Cloudinary jika file ada
-    let imageUrl = courseCategory.image; // Tetap gunakan gambar lama jika tidak ada gambar baru
-    if (file) {
-      const result = await uploadMediaToCloudinary(file.path);
-      imageUrl = result.secure_url;
-    }
+    const imageUrl = file
+      ? (await uploadMediaToCloudinary(file.path)).secure_url
+      : courseCategory.image;
 
-    // Update kategori dengan data baru
-    courseCategory.name = name || courseCategory.name;
-    courseCategory.slug = slug || courseCategory.slug;
-    courseCategory.description = description || courseCategory.description;
-    courseCategory.image = imageUrl;
+    Object.assign(courseCategory, {
+      name: name || courseCategory.name,
+      slug,
+      description: description || courseCategory.description,
+      image: imageUrl,
+    });
 
     await courseCategory.save();
 
-    return res.status(200).send({
+    res.status(200).send({
       success: true,
       message: "Course category updated successfully",
       data: courseCategory,
     });
   } catch (error) {
-    return res.status(500).send({
-      success: false,
-      message: "Internal Server Error",
-      error: error.message,
-    });
+    handleError(res, error, "Failed to update course category");
+  }
+}
+
+async function getAllCategory(req, res) {
+  try {
+    const categoryData = await CourseCategory.find().lean();
+
+    return res.status(200).send({ success: true, data: categoryData });
+  } catch (error) {
+    handleError(res, error, "Failed to get categories");
   }
 }
 
@@ -146,11 +129,7 @@ async function createNewCourse(req, res) {
       message: "New Course is created",
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Failed to create course",
-      error: error.message,
-    });
+    handleError(res, error, "Failed to create course");
   }
 }
 
@@ -169,11 +148,7 @@ async function getAllCourseByCategory(req, res) {
 
     return res.status(200).send({ success: true, data: courseData });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Failed to get course",
-      error: error.message,
-    });
+    handleError(res, error, "Failed to get courses by category");
   }
 }
 
@@ -191,70 +166,62 @@ async function createTopicsAndSubtopics({
   session.startTransaction();
 
   try {
-    // Ensure `preview` is converted to boolean
     const previewBooleans = preview.map((value) => value === "true");
-
-    const subtopicIds = [];
-
-    // Iterate over `subtopicName` and `files`
-    for (const [index, subtopic] of subtopicName.entries()) {
-      const file = files[index];
-
-      // Upload video to Cloudinary
-      const uploadResult = await uploadMediaToCloudinary(file.path);
-      const videoUrl = uploadResult.secure_url;
-      const duration = uploadResult.duration;
-
-      // Create Subtopic
-      const newSubtopic = await Subtopic.create(
-        [
-          {
-            subtopicName: subtopic,
-            preview: previewBooleans[index], // Use converted boolean value
-            videoUrl,
-            duration,
-          },
-        ],
-        { session }
-      );
-      subtopicIds.push(newSubtopic[0]._id);
-    }
-
-    // Create Topic
-    const newTopic = await Topic.create(
-      [
-        {
-          topicName,
-          instructor,
-          description,
-          subtopics: subtopicIds,
-        },
-      ],
-      { session }
-    );
 
     // Create Course
     const newCourse = await Course.create(
-      [
-        {
-          courseName,
-          categoryId,
-          topics: newTopic[0]._id,
-        },
-      ],
+      {
+        courseName,
+        categoryId,
+      },
       { session }
     );
+
+    // Create Topic
+    const newTopic = await Topic.create(
+      {
+        courseId: newCourse._id,
+        topicName,
+        instructor,
+        description,
+      },
+
+      { session }
+    );
+
+    // Iterate over `subtopicName` and `files`
+    for (let i = 0; i < subtopicName.length; i++) {
+      const uploadResult = await uploadMediaToCloudinary(files[i].path);
+
+      await Subtopic.create(
+        {
+          topicId: newTopic._id,
+          subtopicName: subtopicName,
+          preview: previewBooleans[i],
+          videoUrl: uploadResult.secure_url,
+          duration: uploadResult.duration,
+        },
+        { session }
+      );
+    }
 
     // Commit Transaction
     await session.commitTransaction();
     session.endSession();
-    return newCourse;
   } catch (error) {
     // Rollback Transaction
     await session.abortTransaction();
     session.endSession();
     throw error;
   }
+}
+
+function handleError(res, error, message) {
+  res.status(500).send({
+    success: false,
+    message,
+    error: error.message,
+  });
 }
 
 module.exports = {

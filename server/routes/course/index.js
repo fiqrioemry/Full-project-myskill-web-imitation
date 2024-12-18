@@ -10,6 +10,28 @@ const {
 } = require("../../controller/course");
 
 const router = express.Router();
+// create category
+router.post(
+  "/category/add",
+  isAuthenticate,
+  isAdmin,
+  upload("image").single("file"),
+  multerErrorHandle,
+  createCourseCategory
+);
+
+// update category
+router.put(
+  "/category/update/:id",
+  isAuthenticate,
+  isAdmin,
+  upload("image").single("file"),
+  multerErrorHandle,
+  updateCourseCategory
+);
+
+// get category
+router.get("/category", getAllCategory);
 
 router.post(
   "/add",
@@ -20,24 +42,7 @@ router.post(
   createNewCourse
 );
 
-router.get("/category", getAllCategory);
+// get course by id
 router.get("/category/:categoryId", getAllCourseByCategory);
-router.post(
-  "/category/add",
-  isAuthenticate,
-  isAdmin,
-  upload("image").single("file"),
-  multerErrorHandle,
-  createCourseCategory
-);
-
-router.put(
-  "/category/update/:id",
-  isAuthenticate,
-  isAdmin,
-  upload("image").single("file"),
-  multerErrorHandle,
-  updateCourseCategory
-);
 
 module.exports = router;
