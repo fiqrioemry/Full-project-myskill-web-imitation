@@ -5,8 +5,7 @@ const createSlug = require("../../utils/createSlug");
 async function createCourseCategory(req, res) {
   try {
     const file = req.file;
-    const { name, description } = req.body;
-    const slug = createSlug(name);
+    const { name, categoryId } = req.body;
 
     const existCategory = await CourseCategory.findOne({ slug });
 
@@ -25,8 +24,7 @@ async function createCourseCategory(req, res) {
 
     return res.status(201).send({
       success: true,
-      message: "New Course Category is created",
-      data: courseCategoryData,
+      message: "New Course is created",
     });
   } catch (error) {
     return res.status(500).send({

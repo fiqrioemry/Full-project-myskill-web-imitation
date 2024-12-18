@@ -6,12 +6,6 @@ const CourseCategorySchema = new mongoose.Schema(
     slug: String,
     description: String,
     image: String,
-    course: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Course",
-      },
-    ],
   },
   { timestamps: true }
 );
