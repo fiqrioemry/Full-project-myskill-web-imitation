@@ -13,11 +13,11 @@ const HistorySchema = new mongoose.Schema(
       required: true,
     },
     topicId: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId, // 1,2,3,4
       ref: "Topic",
       required: true,
     },
-    subtopicProgress: [
+    progress: [
       {
         subtopicId: {
           type: mongoose.Schema.Types.ObjectId,
@@ -29,16 +29,11 @@ const HistorySchema = new mongoose.Schema(
           enum: ["completed", "in-progress"],
           default: "in-progress",
         },
-        watchedAt: { type: Date },
       },
     ],
-    progress: {
-      type: Number,
-      default: 0,
-    },
     status: {
       type: String,
-      enum: ["in-progress", "completed"],
+      enum: ["completed", "in-progress"],
       default: "in-progress",
     },
     updatedAt: {

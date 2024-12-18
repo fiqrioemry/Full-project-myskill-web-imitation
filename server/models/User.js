@@ -6,24 +6,11 @@ const UserSchema = new mongoose.Schema(
     password: { type: String, require: true },
     role: { type: String, enum: ["student", "admin"] },
     token: String,
-    subscription: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Subscription",
-      },
-    ],
-    profile: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Profile",
-      },
-    ],
-    payment: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Payment",
-      },
-    ],
+    profile: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Profile",
+    },
+
     history: [
       {
         type: mongoose.Schema.Types.ObjectId,

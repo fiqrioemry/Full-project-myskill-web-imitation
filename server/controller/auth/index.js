@@ -1,5 +1,4 @@
 const User = require("../../models/User");
-const Token = require("../../models/Token");
 const Profile = require("../../models/Profile");
 const bcrypt = require("bcrypt");
 const dotenv = require("dotenv");
@@ -26,15 +25,15 @@ async function userSignUp(req, res) {
     const salt = await bcrypt.genSalt();
     const hashPassword = await bcrypt.hash(password, salt);
 
-    const newUser = await User.create({
+    const profile = await Profile.create({
+      fullname,
+    });
+
+    await User.create({
       email,
       password: hashPassword,
       role,
-    });
-
-    await Profile.create({
-      userId: newUser._id,
-      fullname,
+      profile: profile._id,
     });
 
     return res
@@ -53,8 +52,7 @@ async function userSignIn(req, res) {
   try {
     const { email, password } = req.body;
 
-    const userData = await User.findOne({ email });
-    const userProfile = await Profile.findOne({ userId: userData._id });
+    const userData = await User.findOne({ email }).populate("profile").exec();
 
     if (!userData)
       return res
@@ -69,7 +67,7 @@ async function userSignIn(req, res) {
         .send({ success: false, message: "Password is wrong" });
 
     const userId = userData._id;
-    const userName = userProfile.fullname;
+    const userName = userData.profile.fullname;
     const userEmail = userData.email;
     const userRole = userData.role;
 
@@ -89,19 +87,8 @@ async function userSignIn(req, res) {
       }
     );
 
-    const tokenData = await Token.findOne({ userId });
-
-    if (!tokenData) {
-      await Token.create({
-        userId,
-        refreshToken,
-        expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-      });
-    } else {
-      tokenData.refreshToken = refreshToken;
-      tokenData.expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
-      await tokenData.save();
-    }
+    userData.token = refreshToken;
+    await userData.save();
 
     return res
       .status(200)
