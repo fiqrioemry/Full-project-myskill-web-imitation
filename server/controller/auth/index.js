@@ -15,7 +15,7 @@ async function userSignUp(req, res) {
         .status(400)
         .send({ success: false, message: "password did not match" });
 
-    const isExist = await User.findOne({ email });
+    const isExist = await User.findOne({ email }).lean();
 
     if (isExist)
       return res
@@ -51,7 +51,7 @@ async function userSignUp(req, res) {
 async function userSignIn(req, res) {
   try {
     const { email, password } = req.body;
-
+    console.log(email);
     const userData = await User.findOne({ email });
 
     if (!userData)
@@ -66,15 +66,14 @@ async function userSignIn(req, res) {
         .status(400)
         .send({ success: false, message: "Password is wrong" });
 
-    const profileData = await Profile.find({ userId: userData._id }).populate(
-      "userId",
-      "email, role"
-    );
+    const profileData = await Profile.findOne({
+      userId: userData._id,
+    }).populate("userId", "_id email role");
 
-    const userId = profileData.userId;
+    const userId = profileData.userId._id;
     const userName = profileData.fullname;
-    const userEmail = profileData.userId?.email;
-    const userRole = profileData.userId?.Role;
+    const userEmail = profileData.userId.email;
+    const userRole = profileData.userId.role;
 
     const accessToken = jwt.sign(
       { userId, userName, userEmail, userRole },

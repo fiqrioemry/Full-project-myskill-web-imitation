@@ -25,6 +25,7 @@ async function getAllCategory(req, res) {
 async function createCourseCategory(req, res) {
   try {
     const file = req.file;
+
     const { name, description } = req.body;
     const slug = createSlug(name);
 
@@ -39,6 +40,7 @@ async function createCourseCategory(req, res) {
 
     const courseCategoryData = await CourseCategory.create({
       name,
+      slug,
       description,
       image: result.secure_url,
     });
@@ -52,6 +54,63 @@ async function createCourseCategory(req, res) {
     return res.status(500).send({
       success: false,
       message: "Internal Server Error ",
+      error: error.message,
+    });
+  }
+}
+
+async function updateCourseCategory(req, res) {
+  try {
+    const { id } = req.params;
+    const file = req.file;
+    const { name, description } = req.body;
+
+    const slug = name ? createSlug(name) : undefined;
+
+    const courseCategory = await CourseCategory.findById(id);
+
+    if (!courseCategory) {
+      return res
+        .status(404)
+        .send({ success: false, message: "Course category not found" });
+    }
+
+    // Periksa apakah slug baru sudah ada (jika nama diubah)
+    if (slug && slug !== courseCategory.slug) {
+      const existCategory = await CourseCategory.findOne({ slug });
+
+      if (existCategory) {
+        return res.status(400).send({
+          success: false,
+          message: "Slug already exists for another category",
+        });
+      }
+    }
+
+    // Upload gambar ke Cloudinary jika file ada
+    let imageUrl = courseCategory.image; // Tetap gunakan gambar lama jika tidak ada gambar baru
+    if (file) {
+      const result = await uploadMediaToCloudinary(file.path);
+      imageUrl = result.secure_url;
+    }
+
+    // Update kategori dengan data baru
+    courseCategory.name = name || courseCategory.name;
+    courseCategory.slug = slug || courseCategory.slug;
+    courseCategory.description = description || courseCategory.description;
+    courseCategory.image = imageUrl;
+
+    await courseCategory.save();
+
+    return res.status(200).send({
+      success: true,
+      message: "Course category updated successfully",
+      data: courseCategory,
+    });
+  } catch (error) {
+    return res.status(500).send({
+      success: false,
+      message: "Internal Server Error",
       error: error.message,
     });
   }
@@ -203,4 +262,5 @@ module.exports = {
   getAllCourseByCategory,
   createCourseCategory,
   getAllCategory,
+  updateCourseCategory,
 };

@@ -4,9 +4,9 @@ const Profile = require("../../models/Profile");
 async function getUserProfile(req, res) {
   try {
     const { userId } = req.user;
-
+    console.log(userId);
     const userData = await Profile.findOne({ userId });
-
+    console.log(userData);
     if (!userData)
       return res
         .status(403)

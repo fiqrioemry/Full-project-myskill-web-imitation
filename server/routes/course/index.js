@@ -6,6 +6,7 @@ const {
   getAllCourseByCategory,
   createCourseCategory,
   createNewCourse,
+  updateCourseCategory,
 } = require("../../controller/course");
 
 const router = express.Router();
@@ -25,9 +26,18 @@ router.post(
   "/category/add",
   isAuthenticate,
   isAdmin,
-  upload("image").array("files", 5),
+  upload("image").single("file"),
   multerErrorHandle,
   createCourseCategory
+);
+
+router.put(
+  "/category/update/:id",
+  isAuthenticate,
+  isAdmin,
+  upload("image").single("file"),
+  multerErrorHandle,
+  updateCourseCategory
 );
 
 module.exports = router;
