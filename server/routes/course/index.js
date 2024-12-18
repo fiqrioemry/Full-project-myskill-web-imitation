@@ -8,6 +8,10 @@ const {
 const {
   createCourseCategory,
 } = require("../../controller/course/createCourseCategory");
+const {
+  uploadVideo,
+  createNewCourse,
+} = require("../../controller/course/createNewCourse");
 
 const router = express.Router();
 
@@ -19,5 +23,7 @@ router.post(
   multerErrorHandle,
   createCourseCategory
 );
+
+router.post("/add", createNewCourse);
 
 module.exports = router;

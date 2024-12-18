@@ -1,38 +1,36 @@
+const createTopicsAndSubtopics = require("./createTopicsAndSubtopics");
 const { uploadMediaToCloudinary } = require("../../utils/Cloudinary");
-const CourseCategory = require("../../models/CourseCategory");
-const createSlug = require("../../utils/createSlug");
 
-async function createCourseCategory(req, res) {
+async function createNewCourse(req, res) {
+  const { courseName, categoryId, topicsData } = req.body;
+
   try {
-    const file = req.file;
-    const { name, categoryId } = req.body;
-
-    const existCategory = await CourseCategory.findOne({ slug });
-
-    if (existCategory)
-      return res
-        .status(400)
-        .send({ success: false, message: "Course category already exist" });
-
-    const result = await uploadMediaToCloudinary(file.path);
-
-    const courseCategoryData = await CourseCategory.create({
-      name,
-      description,
-      image: result.secure_url,
+    const newCourse = await createTopicsAndSubtopics({
+      courseName,
+      categoryId,
+      topicsData,
     });
 
-    return res.status(201).send({
+    res.status(201).json({
       success: true,
-      message: "New Course is created",
+      message: "Course created successfully",
+      data: newCourse,
     });
   } catch (error) {
-    return res.status(500).send({
+    res.status(500).json({
       success: false,
-      message: "Internal Server Error ",
+      message: "Failed to create course",
       error: error.message,
     });
   }
 }
 
-module.exports = { createCourseCategory };
+async function uploadVideo(req, res) {
+  const file = req.file;
+
+  const upload = await uploadMediaToCloudinary(file.path);
+
+  return res.status(200).send({ success: true, data: upload });
+}
+
+module.exports = { createNewCourse, uploadVideo };
