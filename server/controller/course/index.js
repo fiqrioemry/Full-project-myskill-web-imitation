@@ -6,7 +6,7 @@ const Subtopic = require("../../models/Subtopic");
 const createSlug = require("../../utils/createSlug");
 const CourseCategory = require("../../models/CourseCategory");
 const { uploadMediaToCloudinary } = require("../../utils/Cloudinary");
-const createTopicsAndSubtopics = require("./createTopicsAndSubtopics");
+const { courseRoute } = require("../../routes");
 
 async function getAllCategory(req, res) {
   try {
@@ -97,14 +97,16 @@ async function createNewCourse(req, res) {
 
 async function getAllCourseByCategory(req, res) {
   try {
-    const categoryId = req.params;
+    const { categoryId } = req.params; // Extract categoryId
 
-    const courseData = await Course.findOne({ categoryId });
+    const courseData = await Course.find({ category: categoryId });
 
-    if (!courseData)
-      return res
-        .status(404)
-        .send({ success: false, message: "Course is not found" });
+    if (!courseData || courseData.length === 0) {
+      return res.status(404).send({
+        success: false,
+        message: "No courses found for this category",
+      });
+    }
 
     return res.status(200).send({ success: true, data: courseData });
   } catch (error) {
@@ -177,7 +179,7 @@ async function createTopicsAndSubtopics({
       [
         {
           courseName,
-          category: categoryId,
+          categoryId,
           topics: newTopic[0]._id,
         },
       ],

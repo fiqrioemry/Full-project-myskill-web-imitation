@@ -2,17 +2,12 @@ const mongoose = require("mongoose");
 
 const CourseSchema = new mongoose.Schema(
   {
-    courseName: String,
-    category: {
+    categoryId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "CourseCategory",
     },
-    topics: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Topic",
-      },
-    ],
+    courseName: String,
+    courseDescription: String,
   },
   { timestamps: true }
 );

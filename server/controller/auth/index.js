@@ -25,15 +25,15 @@ async function userSignUp(req, res) {
     const salt = await bcrypt.genSalt();
     const hashPassword = await bcrypt.hash(password, salt);
 
-    const profile = await Profile.create({
-      fullname,
-    });
-
-    await User.create({
+    const newUser = await User.create({
       email,
       password: hashPassword,
       role,
-      profile: profile._id,
+    });
+
+    await Profile.create({
+      userId: newUser._id,
+      fullname,
     });
 
     return res
@@ -52,7 +52,7 @@ async function userSignIn(req, res) {
   try {
     const { email, password } = req.body;
 
-    const userData = await User.findOne({ email }).populate("profile").exec();
+    const userData = await User.findOne({ email });
 
     if (!userData)
       return res
@@ -66,10 +66,15 @@ async function userSignIn(req, res) {
         .status(400)
         .send({ success: false, message: "Password is wrong" });
 
-    const userId = userData._id;
-    const userName = userData.profile.fullname;
-    const userEmail = userData.email;
-    const userRole = userData.role;
+    const profileData = await Profile.find({ userId: userData._id }).populate(
+      "userId",
+      "email, role"
+    );
+
+    const userId = profileData.userId;
+    const userName = profileData.fullname;
+    const userEmail = profileData.userId?.email;
+    const userRole = profileData.userId?.Role;
 
     const accessToken = jwt.sign(
       { userId, userName, userEmail, userRole },
@@ -142,6 +147,7 @@ async function userRefreshToken(req, res) {
     }
 
     const user = jwt.verify(refreshToken, process.env.REFRESH_TOKEN);
+
     if (!user)
       return res.status(403).send({
         success: false,

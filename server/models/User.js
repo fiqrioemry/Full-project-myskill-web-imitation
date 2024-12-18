@@ -6,17 +6,6 @@ const UserSchema = new mongoose.Schema(
     password: { type: String, require: true },
     role: { type: String, enum: ["student", "admin"] },
     token: String,
-    profile: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Profile",
-    },
-
-    history: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "History",
-      },
-    ],
   },
   { timestamps: true }
 );
