@@ -4,7 +4,7 @@ const TopicSchema = new mongoose.Schema(
   {
     topicName: String,
     instructor: String,
-    Description: String,
+    description: String,
     subtopics: [
       {
         type: mongoose.Schema.Types.ObjectId,

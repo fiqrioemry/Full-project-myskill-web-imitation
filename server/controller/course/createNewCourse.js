@@ -1,20 +1,39 @@
 const createTopicsAndSubtopics = require("./createTopicsAndSubtopics");
 const { uploadMediaToCloudinary } = require("../../utils/Cloudinary");
-
+const Course = require("../../models/Course");
 async function createNewCourse(req, res) {
-  const { courseName, categoryId, topicsData } = req.body;
+  const {
+    courseName,
+    categoryId,
+    topicName,
+    instructor,
+    description,
+    subtopicName,
+    preview,
+  } = req.body;
+
+  const files = req.files;
 
   try {
-    const newCourse = await createTopicsAndSubtopics({
+    const newCourseData = await createTopicsAndSubtopics({
       courseName,
       categoryId,
-      topicsData,
+      topicName,
+      instructor,
+      description,
+      subtopicName,
+      preview,
+      files,
     });
+
+    const data = await Course.findOne({ _id: newCourseData._id }).populate(
+      "topics"
+    );
 
     res.status(201).json({
       success: true,
       message: "Course created successfully",
-      data: newCourse,
+      data: data,
     });
   } catch (error) {
     res.status(500).json({
