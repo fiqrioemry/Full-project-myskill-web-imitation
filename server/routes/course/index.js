@@ -1,53 +1,31 @@
 const express = require("express");
-const isAuthenticate = require("../../middleware/isAuthenticate");
-const isAdmin = require("../../middleware/isAdmin");
+const { multerErrorHandle, upload } = require("../../middleware/media");
+const { isAuthenticate, isAdmin } = require("../../middleware/validation");
 const {
-  uploadMedia,
-  multerErrorHandle,
-} = require("../../middleware/uploadMedia");
-const {
-  createCourseCategory,
-} = require("../../controller/course/createCourseCategory");
-const { createNewCourse } = require("../../controller/course/createNewCourse");
+  getAllCategory,
+  getAllCourseByCategory,
+} = require("../../controller/course");
 
 const router = express.Router();
 
-router.post(
-  "/category/add",
-  isAuthenticate,
-  isAdmin,
-  uploadMedia("image").array("files", 5),
-  multerErrorHandle,
-  createCourseCategory
-);
-
+router.get("/:categoryId", getAllCourseByCategory);
 router.post(
   "/add",
-  uploadMedia("video", 100000000).any(),
+  isAuthenticate,
+  isAdmin,
+  uploadMedia("video", 100000000).array("files", 5),
   multerErrorHandle,
   createNewCourse
 );
 
+router.get("/category", getAllCategory);
+router.post(
+  "/category/add",
+  isAuthenticate,
+  isAdmin,
+  upload("image").array("files", 5),
+  multerErrorHandle,
+  createCourseCategory
+);
+
 module.exports = router;
-
-// {
-//     courseName : 'Front end development',
-//     category : "Web development",
-//     topics : [
-//         {
-//             topicName : 'HTML Basic',
-//             instructor : "John doe",
-//             description : "intro HTML basic topic",
-//             subtopic : [
-//             {
-//                 subtopicName : "intro HTML"
-//                 videoFile : file uploaded through postman
-//             },
-//             {
-//                 subtopicName : "semantic HTML"
-//                 videoFile : file uploaded through postman
-//             }]
-
-//         },
-//     ]
-//  }

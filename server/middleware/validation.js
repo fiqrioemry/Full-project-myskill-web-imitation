@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 
-module.exports = async function isAuthenticate(req, res, next) {
+async function isAuthenticate(req, res, next) {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
   if (!token) return res.status(401).json({ message: "Token missing" });
@@ -12,4 +12,15 @@ module.exports = async function isAuthenticate(req, res, next) {
     req.user = decode;
     next();
   });
-};
+}
+
+async function isAdmin(req, res, next) {
+  try {
+    if (req.user.userRole !== "admin")
+      return res.status(403).send({ message: "Access is Prohibited" });
+    next();
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+module.exports = { isAuthenticate, isAdmin };

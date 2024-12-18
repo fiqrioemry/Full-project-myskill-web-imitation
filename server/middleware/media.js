@@ -48,7 +48,7 @@ function multerErrorHandle(err, req, res, next) {
 }
 
 // multer configuration
-function uploadMedia(params, size) {
+function upload(params, size) {
   return multer({
     storage: storage,
     limits: { fileSize: size || 1000000 },
@@ -57,6 +57,6 @@ function uploadMedia(params, size) {
 }
 
 module.exports = {
-  uploadMedia,
+  upload,
   multerErrorHandle,
 };
