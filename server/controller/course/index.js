@@ -137,7 +137,7 @@ async function getAllCourseByCategory(req, res) {
   try {
     const { categoryId } = req.params; // Extract categoryId
 
-    const courseData = await Course.find({ category: categoryId });
+    const courseData = await Course.find({ categoryId });
 
     if (!courseData || courseData.length === 0) {
       return res.status(404).send({
@@ -185,7 +185,6 @@ async function createTopicsAndSubtopics({
         instructor,
         description,
       },
-
       { session }
     );
 
@@ -196,7 +195,7 @@ async function createTopicsAndSubtopics({
       await Subtopic.create(
         {
           topicId: newTopic._id,
-          subtopicName: subtopicName,
+          subtopicName: subtopicName[i],
           preview: previewBooleans[i],
           videoUrl: uploadResult.secure_url,
           duration: uploadResult.duration,
