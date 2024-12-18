@@ -7,6 +7,12 @@ const CourseSchema = new mongoose.Schema(
       ref: "CourseCategory",
     },
     courseName: String,
+    topics: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Topic",
+      },
+    ], // Add this line to reference topics
   },
   { timestamps: true }
 );

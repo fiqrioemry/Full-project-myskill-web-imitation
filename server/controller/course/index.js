@@ -133,25 +133,6 @@ async function createNewCourse(req, res) {
   }
 }
 
-async function getAllCourseByCategory(req, res) {
-  try {
-    const { categoryId } = req.params; // Extract categoryId
-
-    const courseData = await Course.find({ categoryId });
-
-    if (!courseData || courseData.length === 0) {
-      return res.status(404).send({
-        success: false,
-        message: "No courses found for this category",
-      });
-    }
-
-    return res.status(200).send({ success: true, data: courseData });
-  } catch (error) {
-    handleError(res, error, "Failed to get courses by category");
-  }
-}
-
 async function createTopicsAndSubtopics({
   courseName,
   categoryId,
@@ -212,6 +193,23 @@ async function createTopicsAndSubtopics({
     await session.abortTransaction();
     session.endSession();
     throw error;
+  }
+}
+
+async function getAllCourseByCategory(req, res) {
+  try {
+    const { categoryId } = req.params; // Extract categoryId
+
+    const courseData = await Topic.find({ courseId: categoryId });
+    if (!courseData || courseData.length === 0) {
+      return res.status(404).send({
+        success: false,
+        message: "No courses found for this category",
+      });
+    }
+    return res.status(200).send({ success: true, data: courseData });
+  } catch (error) {
+    handleError(res, error, "Failed to get courses by category");
   }
 }
 
