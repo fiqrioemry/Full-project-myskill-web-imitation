@@ -141,13 +141,12 @@ async function userRefreshToken(req, res) {
       return res.status(401).send({ message: "Session expired, please login" });
     }
 
-    const refreshTokenData = await Token.findOne({ refreshToken });
-
-    if (!refreshTokenData) {
-      return res.status(403).send({ message: "Unauthorized Access !!!" });
-    }
-
     const user = jwt.verify(refreshToken, process.env.REFRESH_TOKEN);
+    if (!user)
+      return res.status(403).send({
+        success: false,
+        message: "Unauthorized Access !!!",
+      });
 
     const payload = {
       userId: user.userId,
